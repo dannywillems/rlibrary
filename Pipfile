@@ -9,6 +9,10 @@ ipython = "*"
 
 [packages]
 django = "2.0"
+requests = "*"
+pillow = "*"
+ipython = "*"
+dateparser = "*"
 
 [requires]
 python_version = "3.5"
