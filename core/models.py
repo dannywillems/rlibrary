@@ -25,6 +25,10 @@ class Language(models.Model):
         return self.code
 
 
+class Collection(models.Model):
+    name = models.CharField(max_length=128)
+
+
 class Book(models.Model):
     authors = models.ManyToManyField(Author, related_name="author")
     title = models.CharField(max_length=512)
@@ -35,3 +39,4 @@ class Book(models.Model):
     tags = models.ManyToManyField(Tag, related_name="tag")
     language = models.ForeignKey(Language, to_field="code", on_delete=models.CASCADE)
     thumbnail = models.ImageField(null=True, blank=True)
+    collections = models.ManyToManyField(Collection, related_name="collection")
