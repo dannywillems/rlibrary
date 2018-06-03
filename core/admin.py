@@ -5,7 +5,7 @@ from core.forms import DefaultBookForm, BookWithISBNForm
 
 class BookAdmin(admin.ModelAdmin):
     list_display = ("title", "thumbnail", "publisher", "published_date")
-    list_filter = ("tags", "publisher", "published_date", "authors")
+    list_filter = ("tags", "publisher", "published_date", "authors", "language")
     search_fields = ("title", )
 
     def add_view(self, request, form_url="", extra_context=None):
