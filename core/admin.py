@@ -9,11 +9,19 @@ class BookAdmin(admin.ModelAdmin):
     search_fields = ("title", )
 
     def add_view(self, request, form_url="", extra_context=None):
-        self.form = BookWithISBNForm
+        class Form(BookWithISBNForm):
+            def __new__(cls, *args, **kwargs):
+                kwargs["request"] = request
+                return BookWithISBNForm(*args, **kwargs)
+        self.form = Form
         return super(BookAdmin, self).add_view(request, form_url, extra_context)
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
-        self.form = DefaultBookForm
+        class Form(DefaultBookForm):
+            def __new__(cls, *args, **kwargs):
+                kwargs["request"] = request
+                return DefaultBookForm(*args, **kwargs)
+        self.form = Form
         return super(BookAdmin, self).change_view(request, object_id, form_url, extra_context)
 
 

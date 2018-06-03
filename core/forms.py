@@ -6,12 +6,16 @@ from core.actions import build_book_object_based_on_isbn
 class BookWithISBNForm(forms.ModelForm):
     use_isbn = forms.BooleanField(required=False)
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        super(BookWithISBNForm, self).__init__(*args, **kwargs)
+
     def save(self, commit=True):
         super(BookWithISBNForm, self).save(commit=commit)
         use_isbn = self.cleaned_data.get("use_isbn")
         if use_isbn is True:
             isbn = self.cleaned_data.get("isbn")
-            objects = build_book_object_based_on_isbn(isbn, save=False)
+            objects = build_book_object_based_on_isbn(isbn, save=False, self.request.user)
             book = objects["book"]
             authors = objects["authors"]
             tags = objects["tags"]
@@ -32,6 +36,16 @@ class BookWithISBNForm(forms.ModelForm):
 
 
 class DefaultBookForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        super(DefaultBookForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super(DefaultBookForm, self).save(commit=commit)
+        instance.owner = self.request.user
+        instance.save()
+        return instance
+
     class Meta:
         model = Book
-        fields = ("__all__")
+        exclude = ("owner", )

@@ -4,7 +4,7 @@ import dateparser
 from core.models import Author, Book, Tag, Language
 
 
-def build_book_object_based_on_isbn(isbn, save=False):
+def build_book_object_based_on_isbn(isbn, save=False, user=None):
     response = rlibrary.settings.GOOGLE_BOOK_API.list(isbn)
     item = response["items"][0]
     volume_info = item["volumeInfo"]
@@ -33,6 +33,7 @@ def build_book_object_based_on_isbn(isbn, save=False):
     language = Language.objects.get_or_create(code=language)[0]
     data = {
         # "authors": authors_obj,
+        "user": user,
         "title": title,
         "isbn": isbn,
         "publisher": publisher,
