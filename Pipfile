@@ -9,7 +9,7 @@ pytest-cov = "*"
 ipython = "*"
 
 [packages]
-django = "2.0"
+django = "==2.0"
 requests = "*"
 pillow = "*"
 ipython = "*"
