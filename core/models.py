@@ -49,3 +49,4 @@ class Book(models.Model):
     collections = models.ManyToManyField(Collection, related_name="collection")
     bought_date = models.DateTimeField(null=True, blank=True)
     book_type = models.ForeignKey(BookType, on_delete=models.CASCADE, null=True, blank=True)
+    comments = models.TextField(null=True, blank=True)
