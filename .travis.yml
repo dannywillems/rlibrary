@@ -12,5 +12,6 @@ install:
 
 script:
   - pipenv install --dev
+  - pipenv run python manage.py migrate
   - pipenv run pytest --cov=rlibrary -vv
 
