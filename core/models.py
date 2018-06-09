@@ -40,3 +40,4 @@ class Book(models.Model):
     language = models.ForeignKey(Language, to_field="code", on_delete=models.CASCADE)
     thumbnail = models.ImageField(null=True, blank=True)
     collections = models.ManyToManyField(Collection, related_name="collection")
+    bought_date = models.DateTimeField(null=True, blank=True)
