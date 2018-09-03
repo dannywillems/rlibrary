@@ -1,6 +1,10 @@
 language: python
 python:
   - 3.5
+
+services:
+  - docker
+
 env:
   global:
     - PIPENV_VENV_IN_PROJECT=1
@@ -14,4 +18,6 @@ script:
   - pipenv install --dev
   - pipenv run python manage.py migrate
   - pipenv run pytest --cov=rlibrary -vv
+  # Build docker image
+  - docker build -t rlibrary .
 
