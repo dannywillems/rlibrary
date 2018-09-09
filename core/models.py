@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Tag(models.Model):
@@ -50,3 +51,4 @@ class Book(models.Model):
     bought_date = models.DateTimeField(null=True, blank=True)
     book_type = models.ForeignKey(BookType, on_delete=models.CASCADE, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
