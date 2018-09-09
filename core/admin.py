@@ -8,6 +8,9 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ("tags", "publisher", "published_date", "authors", "language")
     search_fields = ("title", )
 
+    def get_queryset(self, request):
+        return super(BookAdmin, self).get_queryset(request).filter(user_id=request.user)
+
     def add_view(self, request, form_url="", extra_context=None):
         class BookWithISBNRequest(BookWithISBNForm):
             def __new__(cls, *args, **kwargs):
