@@ -1,10 +1,16 @@
 language: python
 python:
   - 3.5
+
+#services:
+#  - docker
+
 env:
   global:
     - PIPENV_VENV_IN_PROJECT=1
     - PIPENV_IGNORE_VIRTUALENVS=1
+    - DJANGO_SECRET_KEY=42
+    - DATABASE_NAME=db.sqlite3
 
 install:
   - pip install pipenv
@@ -14,4 +20,6 @@ script:
   - pipenv install --dev
   - pipenv run python manage.py migrate
   - pipenv run pytest --cov=rlibrary -vv
+  # Build docker image
+  #  - docker build -t rlibrary .
 

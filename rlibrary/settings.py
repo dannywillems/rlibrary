@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import tools.googlebooks
 import os
+from decouple import config
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,12 +23,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7y0%$)w677fh=lo7c+cw3bitp%sk3c5g+f20p6^ts46(x(^^fn'
+SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS",
+                       cast=lambda v: [s.strip() for s in v.split(',')],
+                       default="localhost")
 
 
 # Application definition
@@ -72,17 +76,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'rlibrary.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -120,6 +113,35 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
+# External API.
 GOOGLE_BOOK_API = tools.googlebooks.Api()
+
+
+def build_database_dictionary_from_config():
+    database_dict = {}
+    database_dict["ATOMIC_REQUESTS"] = True
+    database_dict["ENGINE"] = config("DATABASE_ENGINE", default="django.db.backends.sqlite3")
+    database_dict["NAME"] = config("DATABASE_NAME", default=".data/db.sqlite3")
+    database_url = config("DATABASE_URL", default=None)
+    database_user = config("DATABASE_USER", default=None)
+    database_password = config("DATABASE_PASSWORD", default=None)
+    database_port = config("DATABASE_PORT", default=None)
+    if database_url is not None:
+        database_dict["HOST"] = database_url
+    if database_user is not None:
+        database_dict["USER"] = database_user
+    if database_password is not None:
+        database_dict["PASSWORD"] = database_password
+    if database_port is not None:
+        database_dict["PORT"] = int(database_port)
+    return database_dict
+
+
+DATABASES = {
+    "default": build_database_dictionary_from_config(),
+}
+
+django_heroku.settings(locals())

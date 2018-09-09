@@ -3,3 +3,7 @@
 Pipfile.lock
 .coverage
 .pytest_cache
+
+.env
+.data
+.idea
