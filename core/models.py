@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Tag(models.Model):
@@ -43,10 +44,11 @@ class Book(models.Model):
     isbn = models.CharField(max_length=13)
     publisher = models.CharField(max_length=512)
     published_date = models.DateTimeField()
-    tags = models.ManyToManyField(Tag, related_name="tag", blank=True, null=True)
+    tags = models.ManyToManyField(Tag, related_name="tag")
     language = models.ForeignKey(Language, to_field="code", on_delete=models.CASCADE)
     thumbnail = models.ImageField(null=True, blank=True)
-    collections = models.ManyToManyField(Collection, related_name="collection", null=True, blank=True)
+    collections = models.ManyToManyField(Collection, related_name="collection")
     bought_date = models.DateTimeField(null=True, blank=True)
     book_type = models.ForeignKey(BookType, on_delete=models.CASCADE, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
